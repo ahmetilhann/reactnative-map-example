@@ -1,0 +1,45 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'mapExample' do
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'DevSupport',
+    'RCTText',
+    'RCTNetwork',
+    'RCTWebSocket',
+    'RCTActionSheet',
+    'RCTAnimation',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTSettings',
+    'RCTVibration',
+    'BatchedBridge'
+  ]
+
+  pod 'react-native-maps', path: '../node_modules/react-native-maps'
+  pod 'GoogleMaps'
+  pod 'react-native-google-maps', path: '../node_modules/react-native-maps'
+
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == 'yoga'
+        target.build_configurations.each do |config|
+            config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+            config.build_settings['GCC_WARN_64_TO_32_BIT_CONVERSION'] = 'NO'
+        end
+    end
+    if target.name == "React"
+      target.remove_from_project
+    end
+    if target.name == 'react-native-google-maps'
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
+      end
+    end
+  end
+end
